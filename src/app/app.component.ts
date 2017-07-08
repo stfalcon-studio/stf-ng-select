@@ -7,9 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent  implements OnInit {
-  title = 'app';
+  selected = {title: 'app1', category: "utitlits"};
 
   ngOnInit() {
-    setTimeout(() => this.title = 'huli', 2000);
+    
   }
 }

@@ -1,1 +1,8 @@
-<stf-ng-select><h1>{{title}}</h1></stf-ng-select>
+<section style="max-width: 200px;">
+    <stf-ng-select [value]="selected">
+        <div value-text>{{selected.title}}({{selected.category}})</div>
+        <section class="options delivery_order__options">
+            <stf-option value="1">Ffff</stf-option>
+        </section>
+    </stf-ng-select>
+<section>
