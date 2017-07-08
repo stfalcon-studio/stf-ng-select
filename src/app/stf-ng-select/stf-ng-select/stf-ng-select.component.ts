@@ -41,6 +41,7 @@ export class StfNgSelectComponent implements OnInit {
   constructor(private el: ElementRef) { }
 
   keyDown(event) {
+    console.log(event);
     switch (event.keyCode) {
       case 40:
         this.keyArrowDown(event);
@@ -57,7 +58,7 @@ export class StfNgSelectComponent implements OnInit {
         if (!this.isOpened) {
           this.makeOpen();
         } else if (!this.value) {
-          const option: any = document.querySelector(`.stf-select__options-wraped[select-id="${this.selectId}"] .stf-select-option`);
+          const option: any = document.querySelector(`#${this.selectId} .stf-select-option`);
           if (option) {
             option.click();
           }
@@ -79,6 +80,7 @@ export class StfNgSelectComponent implements OnInit {
   }
 
   keyPress(event) {
+    console.log(event);
     if (
       event.keyCode !== 40 && event.keyCode !== 38 &&
       event.keyCode !== 27 && event.keyCode !== 13 && event.keyCode !== 9 &&

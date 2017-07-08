@@ -15,7 +15,7 @@
             <div (click)="openClose($event)" class="stf-select__icon"></div>
         </div>
 
-        <div  class="stf-select__search-input">
+        <div [tabindex]="isOpened ? -1 : 0" class="stf-select__search-input">
             <ng-content select="[search-input]"></ng-content>
         </div>
         <div [id]="selectId" [ngClass]="{'stf-select_opened': isOpened, 'stf-select_empty': !options || !options.length}"
