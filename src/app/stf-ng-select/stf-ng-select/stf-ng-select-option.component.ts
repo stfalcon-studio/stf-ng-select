@@ -33,19 +33,21 @@ export class StfNgSelectOptionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const el = findAncestor(this.el.nativeElement, '.stf-select__options-wraped');
-    if (el) {
-      this.selectId = el.getAttribute("id");
-    }
+    setTimeout(
+      () => {
+        const el = findAncestor(this.el.nativeElement, '.stf-select__options-wraped');
+        if (el) {
+          this.selectId = el.getAttribute("id");
+        }
 
-    eventHub.$emit("stf-select-option.mounted",
-      {
-        option: this,
-        selectId: this.selectId,
-      }
-    );
 
-    console.log(this);
+        eventHub.$emit("stf-select-option.mounted",
+          {
+            option: this,
+            selectId: this.selectId,
+          }
+        );
+      }, 0);
   }
 
   selectValue() {

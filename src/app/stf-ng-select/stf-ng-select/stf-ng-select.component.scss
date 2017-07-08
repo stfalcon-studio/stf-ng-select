@@ -198,6 +198,7 @@ stf-fixed-option {
   &:focus{
     outline: none;
   }
+  
 }
 .stf-select_has-value {
   .stf-select {
@@ -225,6 +226,26 @@ stf-fixed-option {
     &__container {
       border-bottom: 2px solid $black-color;
     }
+  }
+}
+
+.stf-select_focus-searh {
+  .stf-select {
+
+    &__icon {
+      &:after {
+        border-color: $black-color transparent transparent transparent;
+      }
+    }
+    &__container {
+      border-bottom: 2px solid $black-color;
+    }
+    &__icon {
+      &:after {
+        opacity: 1;
+      }
+    }
+
   }
 }
 
@@ -288,6 +309,7 @@ stf-fixed-option {
     }
   }
 }
+
 .stf-select-root[required] {
   .stf-select {
     &__placeholder {

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { FormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { StfNgSelectModule } from './stf-ng-select/stf-ng-select.module';
 
@@ -10,7 +10,8 @@ import { StfNgSelectModule } from './stf-ng-select/stf-ng-select.module';
   ],
   imports: [
     BrowserModule,
-    StfNgSelectModule
+    StfNgSelectModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

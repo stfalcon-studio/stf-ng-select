@@ -1,20 +1,30 @@
-import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, Input, Output, EventEmitter, forwardRef, ViewEncapsulation } from '@angular/core';
 import { eventHub } from './even-hub';
 import { getPosition, hasPositioFixedAncestor, isMob, addClass, findAncestor } from './dom-lib';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'stf-ng-select',
   templateUrl: './stf-ng-select.component.html',
-  styleUrls: ['./stf-ng-select.component.scss']
+  styleUrls: ['./stf-ng-select.component.scss'],
+  providers: [
+    { 
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => StfNgSelectComponent),
+      multi: true
+    }
+  ],
+  encapsulation: ViewEncapsulation.None
 })
-export class StfNgSelectComponent implements OnInit {
+export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
   @Input() more = false;
   @Input() needFocusInpOnTab = false;
   @Input() optionsWrapClass = '';
   @Input() pending = false;
-  @Input() value: any;
+  @Input() _selected: any;
   @Output() loadMore: EventEmitter<any> = new EventEmitter();
 
+  isFocusSearh = false;
   isOpened = false;
   isNeedHideOption = false;
   hasAncesroFixed = false;
@@ -23,6 +33,15 @@ export class StfNgSelectComponent implements OnInit {
 
   get elN() {
     return this.el.nativeElement;
+  }
+
+  get selected() {
+    return this._selected;
+  }
+
+  set selected(val) {
+    this._selected = val;
+    this.propagateChange(this._selected);
   }
 
   private beforeSetValueFocus = true;
@@ -40,8 +59,15 @@ export class StfNgSelectComponent implements OnInit {
 
   constructor(private el: ElementRef) { }
 
+  blurSearch() {
+    this.isFocusSearh = false;
+  }
+
+  focusSearch() {
+    this.isFocusSearh = true;
+  }
+
   keyDown(event) {
-    console.log(event);
     switch (event.keyCode) {
       case 40:
         this.keyArrowDown(event);
@@ -57,7 +83,7 @@ export class StfNgSelectComponent implements OnInit {
       case 13:
         if (!this.isOpened) {
           this.makeOpen();
-        } else if (!this.value) {
+        } else if (!this.selected) {
           const option: any = document.querySelector(`#${this.selectId} .stf-select-option`);
           if (option) {
             option.click();
@@ -80,7 +106,6 @@ export class StfNgSelectComponent implements OnInit {
   }
 
   keyPress(event) {
-    console.log(event);
     if (
       event.keyCode !== 40 && event.keyCode !== 38 &&
       event.keyCode !== 27 && event.keyCode !== 13 && event.keyCode !== 9 &&
@@ -88,7 +113,7 @@ export class StfNgSelectComponent implements OnInit {
 
     ) {
       this.isOpened = true;
-      addClass(this.elN, 'stf-select_opened');
+      // addClass(this.elN, 'stf-select_opened');
 
       this.hasAncesroFixed = hasPositioFixedAncestor(this.elN);
       eventHub.$emit('stf-select-option.opened', {
@@ -105,9 +130,9 @@ export class StfNgSelectComponent implements OnInit {
       let charCode = event.which || event.keyCode;
       let charTyped = String.fromCharCode(charCode);
       if ((/[\wА-Яа-яїєЇЄь]/).test(charTyped)) {
-        this.inputEl.value = charTyped;
+        this.inputEl.selected = charTyped;
       } else {
-        this.inputEl.value = '';
+        this.inputEl.selected = '';
       }
 
       let eventntInput = new Event('input');
@@ -140,7 +165,7 @@ export class StfNgSelectComponent implements OnInit {
     this.optionSelectedCallback = (event) => {
       if (event.selectId === this.selectId) {
         this.close();
-        // this.$emit('input', event.value);
+        this.selected = event.value;
         const searchInpitEl = this.elN.querySelector(".stf-select__search-input");
         this.beforeSetValueFocus = true;
         searchInpitEl && searchInpitEl.focus();
@@ -169,6 +194,7 @@ export class StfNgSelectComponent implements OnInit {
     };
 
     this.onOpenedSelect = (event) => {
+      console.log(event.selectId, this.selectId);
       if (event.selectId !== this.selectId) {
         this.close();
       }
@@ -179,7 +205,7 @@ export class StfNgSelectComponent implements OnInit {
     eventHub.$on("stf-select-option.destroyed", this.onOptionDestroyed);
     eventHub.$on("stf-select.opened", this.onOpenedSelect);
 
-    setTimeout(() => this.selectOptionsEl = <any>this.selectOptionsWrapEl.querySelector('.stf-select__options'), 100);
+    setTimeout(() => this.selectOptionsEl = <any>this.selectOptionsWrapEl.querySelector('.stf-select__options'), 0);
   }
 
   makeLoadMore() {
@@ -254,18 +280,32 @@ export class StfNgSelectComponent implements OnInit {
     this.selectOptionsEl.style.width = this.selectContainerEl.offsetWidth + 'px';
   }
 
+  propagateChange = (_: any) => {};
+
+  registerOnChange(fn) {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched() {}
+
   waraperClick(event) {
     event.stopPropagation();
     event.preventDefault();
   }
 
+  writeValue(value: any) {
+    this.selected = value;
+  }
+
   private close() {
     this.isOpened = false;
+    this.isFocusSearh = false;
     this.inputEl = this.elN.querySelector('input');
   }
 
   private keyArrowDown(event) {
     const elements = this.getArrayElementForFocus();
+    console.log(elements);
     const currentFocusedIndex = this.getCurentFocuseIndex(elements);
     let next = currentFocusedIndex === undefined ? 0 : (currentFocusedIndex + 1);
 
@@ -282,7 +322,7 @@ export class StfNgSelectComponent implements OnInit {
   private getArrayElementForFocus() {
     const elements = [];
     elements.push(...this.elN.querySelectorAll('input'));
-    elements.push(...<any>document.querySelectorAll(`[select-id="${this.selectId}"] .stf-select-option`));
+    elements.push(...<any>document.querySelectorAll(`#${this.selectId} .stf-select-option`));
 
     return elements;
   }
@@ -317,7 +357,7 @@ export class StfNgSelectComponent implements OnInit {
       selectId: this.selectId
     });
 
-    addClass(this.elN, 'stf-select_opened');
+    addClass(this.elN.querySelector('.stf-select'), 'stf-select_opened');
     const inputEl = this.elN.querySelector("input");
     if (inputEl !== document.activeElement) {
       if (inputEl) {

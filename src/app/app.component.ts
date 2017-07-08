@@ -8,6 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent  implements OnInit {
   selected = {title: 'app1', category: "utitlits"};
+  options = [
+    {title: 'app1', category: "utitlits"},
+    {title: 'app2', category: "social network"},
+    {title: 'Call of dutty', category: "game"},
+  ];
 
   ngOnInit() {
     

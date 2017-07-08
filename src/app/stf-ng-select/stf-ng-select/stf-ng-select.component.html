@@ -1,5 +1,9 @@
 <div class="stf-select stf-select_sm"
-    [ngClass]="{ 'stf-select_has-value': value !== null && value !== undefined ? true : false, 'stf-select_opened': isOpened, 'stf-select_empty': !options || !options.length}"
+    [ngClass]="{ 'stf-select_has-value': selected !== null && selected !== undefined ? true : false, 
+        'stf-select_opened': isOpened, 
+        'stf-select_empty': !options || !options.length,
+        'stf-select_focus-searh': isFocusSearh
+        }"
     (keydown)="keyDown($event)" 
     (keypress)="keyPress($event)" 
     (click)="open($event)"
@@ -15,7 +19,7 @@
             <div (click)="openClose($event)" class="stf-select__icon"></div>
         </div>
 
-        <div [tabindex]="isOpened ? -1 : 0" class="stf-select__search-input">
+        <div (focus)="focusSearch()" (blur)="blurSearch()" [tabindex]="isOpened ? -1 : 0" class="stf-select__search-input">
             <ng-content select="[search-input]"></ng-content>
         </div>
         <div [id]="selectId" [ngClass]="{'stf-select_opened': isOpened, 'stf-select_empty': !options || !options.length}"
@@ -25,6 +29,7 @@
                 role="combobox" aria-haspopup="true" aria-expanded="false"
                 (mousewheel)="onMouseWheal($event)"
                 (scroll)="makeLoadMore($event)"
+                (keydown)="keyDown($event)" 
             >
                 <div class="stf-select__options-container">
                     <ng-content></ng-content>
