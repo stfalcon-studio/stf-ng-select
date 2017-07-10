@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Input, Output, EventEmitter, forwardRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ElementRef, Input, Output, EventEmitter, forwardRef, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { eventHub } from './even-hub';
 import { getPosition, hasPositioFixedAncestor, isMob, addClass, findAncestor } from './dom-lib';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -8,7 +8,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './stf-ng-select.component.html',
   styleUrls: ['./stf-ng-select.component.scss'],
   providers: [
-    { 
+    {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => StfNgSelectComponent),
       multi: true
@@ -16,7 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
+export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() more = false;
   @Input() needFocusInpOnTab = false;
   @Input() optionsWrapClass = '';
@@ -77,7 +77,7 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
         break;
       case 27:
         this.close();
-        const searchInpitEl = this.elN.querySelector(".stf-select__search-input");
+        const searchInpitEl = this.elN.querySelector('.stf-select__search-input');
         searchInpitEl && searchInpitEl.focus();
         break;
       case 13:
@@ -127,29 +127,29 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
       this.calculatePositionAnsSize();
 
       event = event || window.event;
-      let charCode = event.which || event.keyCode;
-      let charTyped = String.fromCharCode(charCode);
+      const charCode = event.which || event.keyCode;
+      const charTyped = String.fromCharCode(charCode);
       if ((/[\wА-Яа-яїєЇЄь]/).test(charTyped)) {
         this.inputEl.selected = charTyped;
       } else {
         this.inputEl.selected = '';
       }
 
-      let eventntInput = new Event('input');
+      const eventntInput = new Event('input');
       this.inputEl.dispatchEvent(eventntInput);
 
-      eventHub.$emit("stf-select.opened", { idSelect: this.selectId });
+      eventHub.$emit('stf-select.opened', { idSelect: this.selectId });
     }
   }
 
   ngOnDestroy() {
     document.body.removeChild(this.selectOptionsWrapEl);
-    window.removeEventListener("resize", this.runOnResize);
-    window.removeEventListener("click", this.runOnWindowClick);
+    window.removeEventListener('resize', this.runOnResize);
+    window.removeEventListener('click', this.runOnWindowClick);
     eventHub.$off('stf-select-option.selected', this.optionSelectedCallback);
     eventHub.$off('stf-select-option.mounted', this.onOptionMounted);
-    eventHub.$off("stf-select-option.destroyed", this.onOptionDestroyed);
-    eventHub.$off("stf-select.opened", this.onOpenedSelect);
+    eventHub.$off('stf-select-option.destroyed', this.onOptionDestroyed);
+    eventHub.$off('stf-select.opened', this.onOpenedSelect);
   }
 
   ngOnInit() {
@@ -160,13 +160,13 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
     this.addwidowResizeListener();
     this.addOutClickListener();
 
-    this.selectId = "s" + (Date.now() * Math.random()).toString().replace(".", "_");
+    this.selectId = 's' + (Date.now() * Math.random()).toString().replace('.', '_');
 
     this.optionSelectedCallback = (event) => {
       if (event.selectId === this.selectId) {
         this.close();
         this.selected = event.value;
-        const searchInpitEl = this.elN.querySelector(".stf-select__search-input");
+        const searchInpitEl = this.elN.querySelector('.stf-select__search-input');
         this.beforeSetValueFocus = true;
         searchInpitEl && searchInpitEl.focus();
         this.beforeSetValueFocus = false;
@@ -185,7 +185,7 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
 
     this.onOptionDestroyed = (event) => {
       if (event.selectId === this.selectId) {
-        let index = this.options.indexOf(event.option);
+        const index = this.options.indexOf(event.option);
 
         if (index !== -1) {
           this.options.splice(index, 1);
@@ -201,9 +201,9 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
     };
 
     eventHub.$on('stf-select-option.selected', this.optionSelectedCallback);
-    eventHub.$on("stf-select-option.mounted", this.onOptionMounted);
-    eventHub.$on("stf-select-option.destroyed", this.onOptionDestroyed);
-    eventHub.$on("stf-select.opened", this.onOpenedSelect);
+    eventHub.$on('stf-select-option.mounted', this.onOptionMounted);
+    eventHub.$on('stf-select-option.destroyed', this.onOptionDestroyed);
+    eventHub.$on('stf-select.opened', this.onOpenedSelect);
 
     setTimeout(() => this.selectOptionsEl = <any>this.selectOptionsWrapEl.querySelector('.stf-select__options'), 0);
   }
@@ -218,7 +218,9 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   onMouseWheal(event) {
-    if ((this.selectOptionsEl.scrollTop >= (this.selectOptionsEl.scrollHeight - this.selectOptionsEl.offsetHeight) && event.deltaY > 0) || ((this.selectOptionsEl.scrollTop === 0) && event.deltaY < 0)) {
+    if ((this.selectOptionsEl.scrollTop >= (this.selectOptionsEl.scrollHeight - this.selectOptionsEl.offsetHeight) &&
+      event.deltaY > 0) || ((this.selectOptionsEl.scrollTop === 0) && event.deltaY < 0)
+    ) {
       event.preventDefault();
     }
 
@@ -327,7 +329,7 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
     return elements;
   }
   private getCurentFocuseIndex(elements) {
-    for (let key in elements) {
+    for (const key in elements) {
       if (elements[key] === document.activeElement) {
         return +key;
       }
@@ -342,7 +344,9 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
     let prev = currentFocusedIndex === undefined ? -1 : (currentFocusedIndex - 1);
 
     if (prev < 0) {
-      if (elements.length) prev = elements.length - 1;
+      if (elements.length) {
+        prev = elements.length - 1;
+      }
     }
 
     setTimeout(() => elements[prev] && elements[prev].focus(), 100);
@@ -358,13 +362,13 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
     });
 
     addClass(this.elN.querySelector('.stf-select'), 'stf-select_opened');
-    const inputEl = this.elN.querySelector("input");
+    const inputEl = this.elN.querySelector('input');
     if (inputEl !== document.activeElement) {
       if (inputEl) {
         inputEl.focus();
         inputEl.select();
       } else {
-        const searchInpitEl = this.elN.querySelector(".stf-select__search-input")
+        const searchInpitEl = this.elN.querySelector('.stf-select__search-input')
         if (searchInpitEl && searchInpitEl !== document.activeElement) {
           searchInpitEl.focus();
         }
@@ -372,8 +376,8 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     this.calculatePositionAnsSize();
-    this.inputEl = this.elN.querySelector("input");
-    eventHub.$emit("stf-select.opened", { selectId: this.selectId });
+    this.inputEl = this.elN.querySelector('input');
+    eventHub.$emit('stf-select.opened', { selectId: this.selectId });
   }
 
   private optToBody() {
@@ -385,7 +389,7 @@ export class StfNgSelectComponent implements OnInit, ControlValueAccessor {
 StfNgSelectComponent.prototype.makeLoadMore = throttle(StfNgSelectComponent.prototype.makeLoadMore, 200);
 
 function throttle(callback, limit) {
-  var wait = false;
+  let wait = false;
   return function () {
     if (!wait) {
       callback.call();
