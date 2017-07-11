@@ -21,7 +21,6 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() needFocusInpOnTab = false;
   @Input() optionsWrapClass = '';
   @Input() pending = false;
-  @Input() _selected: any;
   @Output() loadMore: EventEmitter<any> = new EventEmitter();
 
   isFocusSearh = false;
@@ -29,6 +28,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   isNeedHideOption = false;
   hasAncesroFixed = false;
   options: any[] = [];
+  _selected: any;
   selectId = '';
 
   get elN() {
@@ -39,7 +39,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     return this._selected;
   }
 
-  set selected(val) {
+  @Input('value') set selected(val) {
     this._selected = val;
     this.propagateChange(this._selected);
   }
@@ -180,6 +180,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     this.onOptionMounted = (event) => {
       if (event.selectId === this.selectId) {
         this.options.push(event.option);
+        console.log(this.options);
       }
     };
 
