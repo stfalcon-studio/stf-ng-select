@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "prepublish": "gulp compile",
+    "prepublish": "gulp sass && gulp compile",
     "build": "ng build",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
@@ -40,6 +40,7 @@
     "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
     "gulp-inline-ng2-template": "^4.0.0",
+    "gulp-sass": "^3.1.0",
     "gulp-typescript": "^3.1.0",
     "istanbul-instrumenter-loader": "^2.0.0",
     "jasmine-core": "~2.6.2",
