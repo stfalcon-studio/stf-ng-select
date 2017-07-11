@@ -194,7 +194,6 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     };
 
     this.onOpenedSelect = (event) => {
-      console.log(event.selectId, this.selectId);
       if (event.selectId !== this.selectId) {
         this.close();
       }
