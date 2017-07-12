@@ -87,6 +87,23 @@ $important-message-background: #ffe6e5;
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12);
   }
 
+  &__options-container {
+    display: block;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #dddddd;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #bdbdbd;
+  }
+  }
+
   &__divider {
     display: block;
     border-top: 1px solid rgba(0, 0, 0, .12);
@@ -128,15 +145,7 @@ stf-select-options {
     }
   }
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #dddddd;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #bdbdbd;
-  }
+  
 }
 
 stf-fixed-option {
@@ -321,7 +330,7 @@ stf-fixed-option {
   }
 }
 .ng-submitted {
-  .stf-select-root {
+  stf-ng-select {
     &.ng-invalid {
       .stf-select {
         &__container {

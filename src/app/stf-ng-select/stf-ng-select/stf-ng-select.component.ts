@@ -209,12 +209,12 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   makeLoadMore() {
-    if (!this.pending && this.more &&
+    /*if (!this.pending && this.more &&
       this.selectOptionsEl.scrollTop
       > ((this.selectOptionsEl.scrollHeight - this.selectOptionsEl.offsetHeight) * 0.66)
     ) {
       this.loadMore.emit({});
-    }
+    }*/
   }
 
   onMouseWheal(event) {
@@ -325,9 +325,11 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     const elements = [];
     elements.push(...this.elN.querySelectorAll('input'));
     elements.push(...<any>document.querySelectorAll(`#${this.selectId} .stf-select-option`));
+    elements.push(...<any>document.querySelectorAll(`#${this.selectId} .stf-select__fixed-option`));
 
     return elements;
   }
+
   private getCurentFocuseIndex(elements) {
     for (const key in elements) {
       if (elements[key] === document.activeElement) {

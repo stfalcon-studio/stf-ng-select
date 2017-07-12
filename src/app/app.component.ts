@@ -7,14 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent  implements OnInit {
-  selected = {title: 'app1', category: "utitlits"};
+  selected = {title: 'app1', category: 'utitlits'};
   options = [
-    {title: 'app1', category: "utitlits"},
-    {title: 'app2', category: "social network"},
-    {title: 'Call of dutty', category: "game"},
+    {title: 'app1', category: 'utitlits'},
+    {title: 'app2', category: 'social network'},
+    {title: 'Call of dutty', category: 'game'},
   ];
 
+  click() {
+    console.log(555);
+  }
+
   ngOnInit() {
-    
   }
 }

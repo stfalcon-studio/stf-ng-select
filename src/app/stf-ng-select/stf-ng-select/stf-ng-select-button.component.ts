@@ -1,27 +1,16 @@
-import { Component, OnInit, ElementRef, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { eventHub } from './even-hub';
 import { findAncestor } from './dom-lib'
 
 @Component({
-  selector: 'stf-option',
-  templateUrl: './stf-select-option.html',
+  selector: 'stf-ng-select-button',
+  templateUrl: './stf-ng-select-button.component.html',
+  styleUrls: ['./stf-ng-select-button.component.css']
 })
-export class StfNgSelectOptionComponent implements OnInit, OnDestroy {
-  @Input() value;
-  isSelected: boolean;
+export class StfNgSelectButtonComponent implements OnInit, OnDestroy {
   selectId: string;
 
   constructor(private el: ElementRef) { }
-
-  keyDown(event) {
-    switch (event.keyCode) {
-      case 13:
-        this.selectValue();
-        event.preventDefault();
-        event.stopPropagation();
-        break;
-    }
-  }
 
   ngOnDestroy() {
     eventHub.$emit('stf-select-option.destroyed',
@@ -50,14 +39,4 @@ export class StfNgSelectOptionComponent implements OnInit, OnDestroy {
       }, 0);
   }
 
-  selectValue() {
-    eventHub.$emit('stf-select-option.selected',
-      {
-        value: this.value,
-        selectId: this.selectId,
-      }
-    );
-    this.isSelected = true;
-  }
 }
-
