@@ -22,13 +22,14 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() optionsWrapClass = '';
   @Input() pending = false;
   @Output() loadMore: EventEmitter<any> = new EventEmitter();
+  @Output() change: EventEmitter<any> = new EventEmitter();
 
   isFocusSearh = false;
   isOpened = false;
   isNeedHideOption = false;
   hasAncesroFixed = false;
   options: any[] = [];
-  _selected: any;
+  @Input() value: any;
   selectId = '';
 
   get elN() {
@@ -36,12 +37,13 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   get selected() {
-    return this._selected;
+    return this.value;
   }
 
-  @Input('value') set selected(val) {
-    this._selected = val;
-    this.propagateChange(this._selected);
+  set selected(val) {
+    this.value = val;
+    this.propagateChange(this.value);
+    this.change.emit(val);
   }
 
   private beforeSetValueFocus = true;
