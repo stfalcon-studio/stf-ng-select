@@ -57,6 +57,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   private runOnResize: any;
   private runOnWindowClick: any;
   private selectOptionsEl: HTMLElement;
+  private selectOptionsoContainerEl: HTMLElement;
   private selectOptionsWrapEl: HTMLElement;
 
   constructor(private el: ElementRef) { }
@@ -182,7 +183,6 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     this.onOptionMounted = (event) => {
       if (event.selectId === this.selectId) {
         this.options.push(event.option);
-        console.log(this.options);
       }
     };
 
@@ -208,25 +208,25 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     eventHub.$on('stf-select.opened', this.onOpenedSelect);
 
     setTimeout(() => this.selectOptionsEl = <any>this.selectOptionsWrapEl.querySelector('.stf-select__options'), 0);
+    setTimeout(() => this.selectOptionsoContainerEl = <any>this.selectOptionsWrapEl.querySelector('.stf-select__options-container'), 0);
   }
 
-  makeLoadMore() {
-    /*if (!this.pending && this.more &&
-      this.selectOptionsEl.scrollTop
-      > ((this.selectOptionsEl.scrollHeight - this.selectOptionsEl.offsetHeight) * 0.66)
+  makeLoadMore = () => {
+    if (!this.pending && this.more &&
+      this.selectOptionsoContainerEl.scrollTop
+      > ((this.selectOptionsoContainerEl.scrollHeight - this.selectOptionsoContainerEl.offsetHeight) * 0.66)
     ) {
       this.loadMore.emit({});
-    }*/
+    }
   }
 
   onMouseWheal(event) {
-    if ((this.selectOptionsEl.scrollTop >= (this.selectOptionsEl.scrollHeight - this.selectOptionsEl.offsetHeight) &&
-      event.deltaY > 0) || ((this.selectOptionsEl.scrollTop === 0) && event.deltaY < 0)
+    if (
+      (this.selectOptionsoContainerEl.scrollTop >= (this.selectOptionsoContainerEl.scrollHeight
+      - this.selectOptionsoContainerEl.offsetHeight) && event.deltaY > 0)
     ) {
       event.preventDefault();
     }
-
-    this.makeLoadMore();
   }
   onSelectFocus(event) {
     if (this.needFocusInpOnTab && !this.beforeSetValueFocus) {
@@ -309,7 +309,6 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private keyArrowDown(event) {
     const elements = this.getArrayElementForFocus();
-    console.log(elements);
     const currentFocusedIndex = this.getCurentFocuseIndex(elements);
     let next = currentFocusedIndex === undefined ? 0 : (currentFocusedIndex + 1);
 

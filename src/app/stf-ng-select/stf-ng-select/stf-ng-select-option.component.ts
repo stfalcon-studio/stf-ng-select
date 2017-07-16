@@ -16,7 +16,7 @@ export class StfNgSelectOptionComponent implements OnInit, OnDestroy {
   keyDown(event) {
     switch (event.keyCode) {
       case 13:
-        this.selectValue();
+        this.selectValue(event);
         event.preventDefault();
         event.stopPropagation();
         break;
@@ -50,7 +50,7 @@ export class StfNgSelectOptionComponent implements OnInit, OnDestroy {
       }, 0);
   }
 
-  selectValue() {
+  selectValue(event) {
     eventHub.$emit('stf-select-option.selected',
       {
         value: this.value,

@@ -12,6 +12,12 @@ export class AppComponent  implements OnInit {
     {title: 'app1', category: 'utitlits'},
     {title: 'app2', category: 'social network'},
     {title: 'Call of dutty', category: 'game'},
+    {title: 'Call of dutty1', category: 'game1'},
+    {title: 'Call of dutty2', category: 'game'},
+    {title: 'Call of dutty3', category: 'game'},
+    {title: 'Call of dutty4', category: 'game'},
+    {title: 'Call of dutty5', category: 'game'},
+    {title: 'Call of dutty6', category: 'game'},
   ];
 
   click() {

@@ -27,11 +27,11 @@
             <div *ngIf="!isNeedHideOption"
                 class="stf-select__options stf-select-options"
                 role="combobox" aria-haspopup="true" aria-expanded="false"
-                (mousewheel)="onMouseWheal($event)"
-                (scroll)="makeLoadMore($event)"
                 (keydown)="keyDown($event)" 
             >
-                <div class="stf-select__options-container">
+                <div (mousewheel)="onMouseWheal($event)"
+                (scroll)="makeLoadMore($event)"
+                    class="stf-select__options-container">
                     <ng-content></ng-content>
                 </div>
                 <ng-content select="[button]"></ng-content>
