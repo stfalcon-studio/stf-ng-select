@@ -25,5 +25,8 @@ export class AppComponent  implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      (<any>document.querySelector('stf-ng-select')).focus();
+    }, 5000);
   }
 }

@@ -139,28 +139,33 @@ stf-select-options {
     }
 }
 
-stf-fixed-option {
+.stf-select__fixed-option button {
     min-height: 48px;
     position: relative;
     display: flex;
     align-items: center;
-    width: auto;
+    width: 100%;
     transition: background 0.15s linear;
     padding: 8px 16px;
     outline: none;
     cursor: pointer;
+    border: none;
     border-top: 1px solid rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
     outline: none;
     margin-bottom: 8px;
+    background: none;
     &:hover {
         background: #eeeeee;
     }
 }
 
 .stf-select__fixed-option {
-    &:focus {
-        background: #eeeeee;
+    &:focus{
+        outline: none;
+        button {
+            background: #eeeeee;
+        }
     }
 }
 

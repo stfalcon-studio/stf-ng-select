@@ -51,6 +51,7 @@ export class StfNgSelectOptionComponent implements OnInit, OnDestroy {
   }
 
   selectValue(event) {
+    console.log(event)
     eventHub.$emit('stf-select-option.selected',
       {
         value: this.value,

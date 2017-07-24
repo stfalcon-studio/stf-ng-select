@@ -108,25 +108,29 @@ stf-select-options {
     stf-select-options stf-select-option:last-child {
       padding-bottom: 8px; }
 
-stf-fixed-option {
+.stf-select__fixed-option button {
   min-height: 48px;
   position: relative;
   display: flex;
   align-items: center;
-  width: auto;
+  width: 100%;
   transition: background 0.15s linear;
   padding: 8px 16px;
   outline: none;
   cursor: pointer;
+  border: none;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
   outline: none;
-  margin-bottom: 8px; }
-  stf-fixed-option:hover {
+  margin-bottom: 8px;
+  background: none; }
+  .stf-select__fixed-option button:hover {
     background: #eeeeee; }
 
 .stf-select__fixed-option:focus {
-  background: #eeeeee; }
+  outline: none; }
+  .stf-select__fixed-option:focus button {
+    background: #eeeeee; }
 
 .stf-select-option {
   min-height: 48px;

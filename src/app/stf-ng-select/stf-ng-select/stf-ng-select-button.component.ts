@@ -39,4 +39,19 @@ export class StfNgSelectButtonComponent implements OnInit, OnDestroy {
       }, 0);
   }
 
+  onEnter(event) {
+    this.el.nativeElement
+      .querySelector('button')
+      .click()
+    ;
+    eventHub.$emit('stf-select-option.selected',
+      {
+        value: null,
+        selectId: null,
+      }
+    );
+
+    return true;
+  }
+
 }

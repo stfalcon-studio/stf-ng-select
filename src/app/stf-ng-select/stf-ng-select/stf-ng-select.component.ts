@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, Input, Output, EventEmitter, forwardRef, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, Input, Output, EventEmitter, forwardRef, ViewEncapsulation, OnDestroy, HostListener } from '@angular/core';
 import { eventHub } from './even-hub';
-import { getPosition, hasPositioFixedAncestor, isMob, addClass, findAncestor } from './dom-lib';
+import { getPosition, hasPositioFixedAncestor, isMob, addClass, findAncestor, hasClass } from './dom-lib';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -62,13 +62,15 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
 
   constructor(private el: ElementRef) { }
 
+  @HostListener('focus', ['$event']) onClick($event) {
+    const el = this.elN.querySelector('.stf-select__search-input');
+    el.focus();
+  }
+
   blurSearch() {
     this.isFocusSearh = false;
   }
 
-  focusSearch() {
-    this.isFocusSearh = true;
-  }
 
   keyDown(event) {
     switch (event.keyCode) {
@@ -116,6 +118,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
 
     ) {
       this.isOpened = true;
+      this.elN.setAttribute('tabindex', '-1');
       // addClass(this.elN, 'stf-select_opened');
 
       this.hasAncesroFixed = hasPositioFixedAncestor(this.elN);
@@ -162,6 +165,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     this.inputEl = this.elN.querySelector('input');
     this.addwidowResizeListener();
     this.addOutClickListener();
+    this.addOnBlurInputListener();
 
     this.selectId = 's' + (Date.now() * Math.random()).toString().replace('.', '_');
 
@@ -179,6 +183,8 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
         this.close();
       }
     };
+
+    this.elN.setAttribute('tabindex', '0');
 
     this.onOptionMounted = (event) => {
       if (event.selectId === this.selectId) {
@@ -223,12 +229,14 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
   onMouseWheal(event) {
     if (
       (this.selectOptionsoContainerEl.scrollTop >= (this.selectOptionsoContainerEl.scrollHeight
-      - this.selectOptionsoContainerEl.offsetHeight) && event.deltaY > 0)
+        - this.selectOptionsoContainerEl.offsetHeight) && event.deltaY > 0)
     ) {
       event.preventDefault();
     }
   }
   onSelectFocus(event) {
+    console.log(event);
+    this.isFocusSearh = true;
     if (this.needFocusInpOnTab && !this.beforeSetValueFocus) {
       this.makeOpen();
     }
@@ -247,6 +255,20 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     }
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  private addOnBlurInputListener() {
+    const el = this.elN.querySelector('.stf-select__search-input input') || this.elN.querySelector('.stf-select__search-input');
+    el.addEventListener('blur', event => {
+      setTimeout(() => {
+        if (document.activeElement  && document.activeElement !== el
+          && !hasClass(<HTMLElement>document.activeElement, 'stf-select__fixed-option')
+          && !hasClass(<HTMLElement>document.activeElement, 'stf-select-option')
+        ) {
+          this.close();
+        }
+      });
+    });
   }
 
   private addwidowResizeListener() {
@@ -284,13 +306,13 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     this.selectOptionsEl.style.width = this.selectContainerEl.offsetWidth + 'px';
   }
 
-  propagateChange = (_: any) => {};
+  propagateChange = (_: any) => { };
 
   registerOnChange(fn) {
     this.propagateChange = fn;
   }
 
-  registerOnTouched() {}
+  registerOnTouched() { }
 
   waraperClick(event) {
     event.stopPropagation();
@@ -305,6 +327,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     this.isOpened = false;
     this.isFocusSearh = false;
     this.inputEl = this.elN.querySelector('input');
+    this.elN.setAttribute('tabindex', '0');
   }
 
   private keyArrowDown(event) {
@@ -381,6 +404,7 @@ export class StfNgSelectComponent implements OnInit, OnDestroy, ControlValueAcce
     this.calculatePositionAnsSize();
     this.inputEl = this.elN.querySelector('input');
     eventHub.$emit('stf-select.opened', { selectId: this.selectId });
+    this.elN.setAttribute('tabindex', '-1');
   }
 
   private optToBody() {
