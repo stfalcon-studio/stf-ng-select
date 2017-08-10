@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, Input, OnDestroy } from '@angular/core';
-import { eventHub } from './even-hub';
+import { eventHub } from './event-hub';
 import { findAncestor } from './dom-lib'
 
 @Component({
