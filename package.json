@@ -2,7 +2,7 @@
   "main": "./dist/lib/stf-ng-select.module.js",
   "types": "./src/app/stf-ng-select/stf-ng-select.module.ts",
   "name": "stf-ng-select",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
