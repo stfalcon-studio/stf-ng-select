@@ -8,7 +8,8 @@ import {
   forwardRef,
   ViewEncapsulation,
   OnDestroy,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from '@angular/core';
 import { eventHub } from './event-hub';
 import {
@@ -82,11 +83,13 @@ export class StfNgSelectComponent
   private selectOptionsoContainerEl: HTMLElement;
   private selectOptionsWrapEl: HTMLElement;
 
-  constructor(private el: ElementRef) {}
+  constructor(
+    private el: ElementRef,
+    private cd: ChangeDetectorRef,
+  ) {}
 
   @HostListener('focus', ['$event'])
   onClick($event) {
-    console.log('host');
     const el = this.elN.querySelector('.stf-select__search-input');
     el.focus();
   }
@@ -379,6 +382,7 @@ export class StfNgSelectComponent
     this.runOnResize = function(evt) {
       if (!vm.isMob) {
         vm.close();
+        vm.cd.markForCheck();
       }
     };
 
@@ -390,6 +394,7 @@ export class StfNgSelectComponent
     this.runOnWindowClick = function(evt) {
       if (!findAncestor(evt.target, '.stf-select')) {
         vm.close();
+        vm.cd.markForCheck();
       }
     };
 
