@@ -380,7 +380,7 @@ export class StfNgSelectComponent
   private addwidowResizeListener() {
     const vm = this;
     this.runOnResize = function(evt) {
-      if (!vm.isMob) {
+      if (!vm.isMob && vm.isOpened) {
         vm.close();
         vm.cd.markForCheck();
       }
@@ -392,7 +392,7 @@ export class StfNgSelectComponent
   private addOutClickListener() {
     const vm = this;
     this.runOnWindowClick = function(evt) {
-      if (!findAncestor(evt.target, '.stf-select')) {
+      if (vm.isOpened && !findAncestor(evt.target, '.stf-select')) {
         vm.close();
         vm.cd.markForCheck();
       }
