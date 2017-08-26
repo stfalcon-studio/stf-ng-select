@@ -354,12 +354,13 @@ export class StfNgSelectComponent
         }
       })
 
-    });
+    }, 20);
 
     el = this.elN.querySelector('.stf-select__search-input input');
 
     if (el) {
       el.addEventListener('blur', event => {
+        setTimeout( () => {
           if (
             event.target !== document.activeElement &&
             !hasClass(
@@ -378,6 +379,7 @@ export class StfNgSelectComponent
             this.close();
             this.cd.markForCheck();
           }
+        });
         });
     }
   }
