@@ -9,7 +9,8 @@ import {
   ViewEncapsulation,
   OnDestroy,
   HostListener,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { eventHub } from './event-hub';
 import {
@@ -218,6 +219,7 @@ export class StfNgSelectComponent
 
       if (event.selectId !== this.selectId) {
         this.close();
+        this.cd.markForCheck();
       }
     };
 
@@ -240,6 +242,7 @@ export class StfNgSelectComponent
     this.onOpenedSelect = event => {
       if (event.selectId !== this.selectId) {
         this.close();
+        this.cd.markForCheck();
       }
     };
 
@@ -310,6 +313,7 @@ export class StfNgSelectComponent
     this.isFocusSearh = true;
     if (this.needFocusInpOnTab && !this.beforeSetValueFocus) {
       this.makeOpen();
+      this.cd.markForCheck();
     }
   }
   open(event) {
@@ -328,9 +332,9 @@ export class StfNgSelectComponent
   }
 
   private addOnBlurInputListener() {
-    let el = this.elN.querySelector('.stf-select__search-input');
+   let el = this.elN.querySelector('.stf-select__search-input');
     el.addEventListener('blur', event => {
-      setTimeout(() => {
+        setTimeout( () => {
         if (
           event.target !== document.activeElement &&
           this.elN.querySelector('.stf-select__search-input input') !==
@@ -346,15 +350,16 @@ export class StfNgSelectComponent
           )
         ) {
           this.close();
+          this.cd.markForCheck();
         }
-      });
+      })
+
     });
 
     el = this.elN.querySelector('.stf-select__search-input input');
 
     if (el) {
       el.addEventListener('blur', event => {
-        setTimeout(() => {
           if (
             event.target !== document.activeElement &&
             !hasClass(
@@ -371,9 +376,9 @@ export class StfNgSelectComponent
             )
           ) {
             this.close();
+            this.cd.markForCheck();
           }
         });
-      });
     }
   }
 
