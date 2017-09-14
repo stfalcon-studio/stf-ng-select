@@ -444,7 +444,7 @@ export class StfNgSelectComponent
       containerOffset.top +
         this.selectContainerEl.clientHeight +
         optionsHeight +
-        10
+        18
     ) {
       this.selectOptionsEl.style.top =
         containerOffset.top + this.selectContainerEl.offsetHeight + 'px';
@@ -455,7 +455,7 @@ export class StfNgSelectComponent
       removeClass(this.elN, 'stf-select__options_top');
     } else {
       this.selectOptionsEl.style.top =
-        containerOffset.top - optionsHeight - 15 + 'px';
+        containerOffset.top - optionsHeight - 20 + 'px';
       this.selectOptionsEl.style.left = containerOffset.left + 'px';
       this.selectOptionsEl.style.width =
         this.selectContainerEl.offsetWidth + 'px';
