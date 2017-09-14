@@ -1,3 +1,6 @@
+<div style="height: 400px;">
+
+</div>
 <section style="max-width: 200px;">
     <stf-ng-select tabindex="0" [(ngModel)]="selected">
         <div value-text>{{selected.title}}({{selected.category}})</div>
@@ -7,17 +10,7 @@
     </stf-ng-select>
     <section>
 
-        <section style="max-width: 200px;">
-            <stf-ng-select [(ngModel)]="selected">
-                <section search-input>
-                    <input>
-                </section>
-                <div value-text>{{selected.title}}({{selected.category}})</div>
-                <section class="options delivery_order__options">
-                    <stf-option *ngFor="let option of options" [value]="option">{{option.category}}: {{option.title}}</stf-option>
-                </section>
-            </stf-ng-select>
-            <section>
+
                 <section style="max-width: 200px;">
                     <stf-ng-select [(ngModel)]="selected">
                         <section search-input>

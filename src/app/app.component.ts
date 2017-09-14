@@ -22,6 +22,7 @@ export class AppComponent  implements OnInit {
   ];
 
   click() {
+    this.options
     console.log(555);
   }
 

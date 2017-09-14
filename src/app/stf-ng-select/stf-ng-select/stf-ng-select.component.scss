@@ -83,6 +83,10 @@ $important-message-background: #ffe6e5;
         z-index: -10;
         background-color: #fafafa;
         box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12);
+
+        &_top{
+            box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12);
+        }
     }
     &__options-container {
         display: block;
@@ -98,6 +102,7 @@ $important-message-background: #ffe6e5;
         &::-webkit-scrollbar-thumb {
             background-color: #bdbdbd;
         }
+        z-index: 1;
     }
     &__divider {
         display: block;

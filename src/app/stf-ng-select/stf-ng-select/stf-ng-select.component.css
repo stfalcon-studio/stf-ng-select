@@ -70,11 +70,14 @@
     z-index: -10;
     background-color: #fafafa;
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12); }
+    .stf-select__options_top {
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12); }
   .stf-select__options-container {
     display: block;
     max-height: 200px;
     overflow-y: auto;
-    overflow-x: hidden; }
+    overflow-x: hidden;
+    z-index: 1; }
     .stf-select__options-container::-webkit-scrollbar {
       width: 8px; }
     .stf-select__options-container::-webkit-scrollbar-track {

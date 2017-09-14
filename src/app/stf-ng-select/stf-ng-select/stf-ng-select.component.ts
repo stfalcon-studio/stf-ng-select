@@ -18,6 +18,7 @@ import {
   hasPositioFixedAncestor,
   isMob,
   addClass,
+  removeClass,
   findAncestor,
   hasClass
 } from './dom-lib';
@@ -75,8 +76,10 @@ export class StfNgSelectComponent
   private onDocumentSctoll: any;
   private onOptionDestroyed: any;
   private onOptionMounted: any;
+  private optionsHeightBefore = 0;
   private onOpenedSelect: any;
   private onScroll: any;
+  private optionsMutationObserver: MutationObserver;
   private optionSelectedCallback: any;
   private runOnResize: any;
   private runOnWindowClick: any;
@@ -84,10 +87,7 @@ export class StfNgSelectComponent
   private selectOptionsoContainerEl: HTMLElement;
   private selectOptionsWrapEl: HTMLElement;
 
-  constructor(
-    private el: ElementRef,
-    private cd: ChangeDetectorRef,
-  ) {}
+  constructor(private el: ElementRef, private cd: ChangeDetectorRef) {}
 
   @HostListener('focus', ['$event'])
   onClick($event) {
@@ -191,6 +191,7 @@ export class StfNgSelectComponent
     eventHub.$off('stf-select-option.destroyed', this.onOptionDestroyed);
     eventHub.$off('stf-select.opened', this.onOpenedSelect);
     eventHub.$off('stf-select-button.clicked', this.onButtonClick);
+    this.optionsMutationObserver.disconnect();
   }
 
   ngOnInit() {
@@ -201,6 +202,9 @@ export class StfNgSelectComponent
     this.addwidowResizeListener();
     this.addOutClickListener();
     this.addOnBlurInputListener();
+    setTimeout(() => {
+      this.initOnChangeDetection();
+    }, 500);
 
     this.selectId =
       's' + (Date.now() * Math.random()).toString().replace('.', '_');
@@ -332,35 +336,41 @@ export class StfNgSelectComponent
   }
 
   private addOnBlurInputListener() {
-   let el = this.elN.querySelector('.stf-select__search-input');
-    el.addEventListener('blur', event => {
-        setTimeout( () => {
-        if (
-          event.target !== document.activeElement &&
-          this.elN.querySelector('.stf-select__search-input input') !==
-            document.activeElement &&
-          !hasClass(
-            <HTMLElement>document.activeElement,
-            'stf-select__fixed-option'
-          ) &&
-          !hasClass(<HTMLElement>document.activeElement, 'stf-select-option') &&
-          !findAncestor(
-            <HTMLElement>document.activeElement,
-            '.stf-select__fixed-option'
-          )
-        ) {
-          this.close();
-          this.cd.markForCheck();
-        }
-      })
-
-    }, 20);
+    let el = this.elN.querySelector('.stf-select__search-input');
+    el.addEventListener(
+      'blur',
+      event => {
+        setTimeout(() => {
+          if (
+            event.target !== document.activeElement &&
+            this.elN.querySelector('.stf-select__search-input input') !==
+              document.activeElement &&
+            !hasClass(
+              <HTMLElement>document.activeElement,
+              'stf-select__fixed-option'
+            ) &&
+            !hasClass(
+              <HTMLElement>document.activeElement,
+              'stf-select-option'
+            ) &&
+            !findAncestor(
+              <HTMLElement>document.activeElement,
+              '.stf-select__fixed-option'
+            )
+          ) {
+            this.close();
+            this.cd.markForCheck();
+          }
+        });
+      },
+      20
+    );
 
     el = this.elN.querySelector('.stf-select__search-input input');
 
     if (el) {
       el.addEventListener('blur', event => {
-        setTimeout( () => {
+        setTimeout(() => {
           if (
             event.target !== document.activeElement &&
             !hasClass(
@@ -380,7 +390,7 @@ export class StfNgSelectComponent
             this.cd.markForCheck();
           }
         });
-        });
+      });
     }
   }
 
@@ -408,21 +418,50 @@ export class StfNgSelectComponent
     window.addEventListener('click', this.runOnWindowClick);
   }
 
-  calculatePositionAnsSize() {
+  private calculatePositionAnsSize() {
     if (!this.isOpened) {
       return;
     }
+
+    const optionsHeight =
+      (this.selectOptionsEl &&
+        this.selectOptionsEl.getBoundingClientRect &&
+        this.selectOptionsEl.getBoundingClientRect().height) ||
+      0;
+    this.optionsHeightBefore = optionsHeight;
 
     this.hasAncesroFixed = hasPositioFixedAncestor(this.elN);
     this.selectOptionsEl.style.position = this.hasAncesroFixed
       ? 'fixed'
       : 'absolute';
     const containerOffset = getOffset(this.selectContainerEl);
-    this.selectOptionsEl.style.top =
-      containerOffset.top + this.selectContainerEl.offsetHeight + 'px';
-    this.selectOptionsEl.style.left = containerOffset.left + 'px';
-    this.selectOptionsEl.style.width =
-      this.selectContainerEl.offsetWidth + 'px';
+
+    if (
+      (window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight) +
+        window.pageYOffset >
+      containerOffset.top +
+        this.selectContainerEl.clientHeight +
+        optionsHeight +
+        10
+    ) {
+      this.selectOptionsEl.style.top =
+        containerOffset.top + this.selectContainerEl.offsetHeight + 'px';
+      this.selectOptionsEl.style.left = containerOffset.left + 'px';
+      this.selectOptionsEl.style.width =
+        this.selectContainerEl.offsetWidth + 'px';
+      removeClass(this.selectOptionsEl, 'stf-select__options_top');
+      removeClass(this.elN, 'stf-select__options_top');
+    } else {
+      this.selectOptionsEl.style.top =
+        containerOffset.top - optionsHeight - 15 + 'px';
+      this.selectOptionsEl.style.left = containerOffset.left + 'px';
+      this.selectOptionsEl.style.width =
+        this.selectContainerEl.offsetWidth + 'px';
+      addClass(this.selectOptionsEl, 'stf-select__options_top');
+      addClass(this.elN, 'stf-select__options_top');
+    }
   }
 
   propagateChange = (_: any) => {};
@@ -488,6 +527,21 @@ export class StfNgSelectComponent
     }
 
     return undefined;
+  }
+
+  private initOnChangeDetection() {
+    if (!MutationObserver) {
+      return;
+    }
+
+    this.optionsMutationObserver = new MutationObserver(
+      throttle(() => {
+        this.calculatePositionAnsSize();
+      }, 100)
+    );
+
+    const config = { subtree: true, childList: true };
+    this.optionsMutationObserver.observe(this.selectOptionsEl, config);
   }
 
   private keyArrowUp(event) {
