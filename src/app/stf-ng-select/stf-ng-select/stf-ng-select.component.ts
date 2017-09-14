@@ -191,7 +191,10 @@ export class StfNgSelectComponent
     eventHub.$off('stf-select-option.destroyed', this.onOptionDestroyed);
     eventHub.$off('stf-select.opened', this.onOpenedSelect);
     eventHub.$off('stf-select-button.clicked', this.onButtonClick);
-    this.optionsMutationObserver.disconnect();
+
+    if (this.optionsMutationObserver) {
+      this.optionsMutationObserver.disconnect();
+    }
   }
 
   ngOnInit() {
