@@ -481,7 +481,7 @@ export class StfNgSelectComponent
   }
 
   writeValue(value: any) {
-    this.selected = value;
+    this.value = value;
   }
 
   private close() {
