@@ -53,6 +53,7 @@ export class StfNgSelectComponent
   options: any[] = [];
   @Input() value: any;
   selectId = '';
+  @Input() selectDisabled = false;
 
   get elN() {
     return this.el.nativeElement;
@@ -565,6 +566,10 @@ export class StfNgSelectComponent
   }
 
   private makeOpen() {
+    if (this.selectDisabled) {
+      return;
+    }
+
     this.isOpened = true;
     eventHub.$emit('stf-select-option.opened', {
       selectId: this.selectId
