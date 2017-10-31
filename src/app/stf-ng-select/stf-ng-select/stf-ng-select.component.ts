@@ -571,7 +571,10 @@ export class StfNgSelectComponent
       selectId: this.selectId
     });
 
-    addClass(this.elN.querySelector('.stf-select'), 'stf-select_opened');
+    if (!this.selectDisabled) {
+      addClass(this.elN.querySelector('.stf-select'), 'stf-select_opened');
+    }
+
     const inputEl = this.elN.querySelector('input');
     if (inputEl !== document.activeElement) {
       if (inputEl) {
