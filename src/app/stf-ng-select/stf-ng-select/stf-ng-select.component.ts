@@ -566,10 +566,6 @@ export class StfNgSelectComponent
   }
 
   private makeOpen() {
-    if (this.selectDisabled) {
-      return;
-    }
-
     this.isOpened = true;
     eventHub.$emit('stf-select-option.opened', {
       selectId: this.selectId

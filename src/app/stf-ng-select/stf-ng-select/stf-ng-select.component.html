@@ -1,6 +1,6 @@
 <div class="stf-select stf-select_sm"
     [ngClass]="{ 'stf-select_has-value': selected !== null && selected !== undefined ? true : false, 
-        'stf-select_opened': isOpened, 
+        'stf-select_opened': isOpened && !selectDisabled, 
         'stf-select_empty': !options || !options.length,
         'stf-select_focus-searh': isFocusSearh
         }"
